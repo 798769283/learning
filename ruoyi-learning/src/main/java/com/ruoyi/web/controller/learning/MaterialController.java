@@ -6,8 +6,8 @@ import com.ruoyi.common.config.Global;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.system.domain.LAnnouncement;
 import com.ruoyi.system.domain.LMaterial;
-import com.ruoyi.system.service.impl.LAnnouncementServiceImpl;
-import com.ruoyi.system.service.impl.LMaterialServiceImpl;
+import com.ruoyi.system.service.ILAnnouncementService;
+import com.ruoyi.system.service.ILMaterialService;
 import com.ruoyi.web.controller.dto.PageDTO;
 import com.ruoyi.web.controller.service.WordService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,10 +37,10 @@ import java.util.Map;
 public class MaterialController extends BaseController {
 
     @Autowired
-    private LAnnouncementServiceImpl announcementService;
+    private ILAnnouncementService announcementService;
 
     @Autowired
-    private LMaterialServiceImpl materialService;
+    private ILMaterialService materialService;
 
     @Autowired
     private WordService asposeWordService;

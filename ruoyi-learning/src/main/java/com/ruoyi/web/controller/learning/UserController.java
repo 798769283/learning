@@ -7,10 +7,10 @@ import com.ruoyi.system.domain.LStudent;
 import com.ruoyi.system.domain.LStudentAccount;
 import com.ruoyi.system.domain.LTeacher;
 import com.ruoyi.system.domain.LTeacherAccount;
-import com.ruoyi.system.service.impl.LStudentAccountServiceImpl;
-import com.ruoyi.system.service.impl.LStudentServiceImpl;
-import com.ruoyi.system.service.impl.LTeacherAccountServiceImpl;
-import com.ruoyi.system.service.impl.LTeacherServiceImpl;
+import com.ruoyi.system.service.ILStudentAccountService;
+import com.ruoyi.system.service.ILStudentService;
+import com.ruoyi.system.service.ILTeacherAccountService;
+import com.ruoyi.system.service.ILTeacherService;
 import com.ruoyi.web.controller.dto.RegisterDTO;
 import com.ruoyi.web.controller.dto.UserDTO;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -33,16 +33,16 @@ import java.util.List;
 public class UserController  extends BaseController {
 
     @Autowired
-    private LStudentAccountServiceImpl studentAccountService;
+    private ILStudentAccountService studentAccountService;
 
     @Autowired
-    private LTeacherAccountServiceImpl teacherAccountService;
+    private ILTeacherAccountService teacherAccountService;
 
     @Autowired
-    private LStudentServiceImpl studentService;
+    private ILStudentService studentService;
 
     @Autowired
-    private LTeacherServiceImpl teacherService;
+    private ILTeacherService teacherService;
 
     /**
      * 登陆方法

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" >
 	<head>
-		<meta charset="UTF-8">
+		<meta charset="UTF-8" http-equiv="refresh" content="2">
 		<title>师生互动</title>
 		<link rel="stylesheet" href="/css/bootstrap.min2.css"   />
 		<link rel="stylesheet" href="/css/global.css"   />
@@ -14,7 +14,8 @@
 					<!-- 选项 -->
 					<ul class="nav nav-tabs mb-3">
 						<li class="nav-item">
-							<a class="nav-link position-relative active" href="letter.html">学生提问<span class="badge badge-danger">3</span></a>
+							<a class="nav-link position-relative active" th:if="${session.user.userType == '学生'}" href="#">老师答复<span class="badge badge-danger">3</span></a>
+							<a class="nav-link position-relative active" th:if="${session.user.userType == '老师'}" href="#">学生提问<span class="badge badge-danger">3</span></a>
 						</li>
 					</ul>
 					<button type="button" class="btn btn-primary btn-sm position-absolute rt-0" data-toggle="modal" data-target="#sendModal">发私信</button>

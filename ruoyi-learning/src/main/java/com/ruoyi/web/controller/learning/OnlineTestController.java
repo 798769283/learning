@@ -6,8 +6,8 @@ import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.system.domain.LQuestionCategory;
 import com.ruoyi.system.domain.LQuestions;
-import com.ruoyi.system.service.impl.LQuestionCategoryServiceImpl;
-import com.ruoyi.system.service.impl.LQuestionsServiceImpl;
+import com.ruoyi.system.service.ILQuestionCategoryService;
+import com.ruoyi.system.service.ILQuestionsService;
 import com.ruoyi.web.controller.dto.PageDTO;
 import com.ruoyi.web.controller.dto.QuestionDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +34,10 @@ public class OnlineTestController extends BaseController {
     private static final String prefix = "learning/theme/";
 
     @Autowired
-    private LQuestionsServiceImpl questionsService;
+    private ILQuestionsService questionsService;
 
     @Autowired
-    private LQuestionCategoryServiceImpl questionCategoryService;
+    private ILQuestionCategoryService questionCategoryService;
 
     /**
      * 获取考题列表

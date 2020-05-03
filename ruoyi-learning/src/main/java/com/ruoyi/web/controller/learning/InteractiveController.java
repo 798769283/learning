@@ -1,6 +1,11 @@
 package com.ruoyi.web.controller.learning;
 
 import com.ruoyi.common.core.controller.BaseController;
+import com.ruoyi.common.exception.user.UserNotExistsException;
+import com.ruoyi.system.domain.LMessage;
+import com.ruoyi.system.service.ILMessageService;
+import com.ruoyi.web.controller.dto.UserDTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +26,8 @@ public class InteractiveController extends BaseController {
 
     private static final String prefix = "learning/theme/";
 
+    @Autowired
+    private ILMessageService messageService;
     /**
      *  私信页
      * @param model
@@ -28,6 +35,14 @@ public class InteractiveController extends BaseController {
      */
     @GetMapping("/interactive")
     public String getInteractive(Model model){
+        // 先从session中取出用户
+        UserDTO userDTO = (UserDTO) getRequest().getSession().getAttribute("user");
+        //判断是否为空
+        if (userDTO==null){
+            throw new UserNotExistsException();
+        }
+        LMessage message = new LMessage();
+        messageService.selectLMessageList(message);
         return prefix+"interactive";
     }
 

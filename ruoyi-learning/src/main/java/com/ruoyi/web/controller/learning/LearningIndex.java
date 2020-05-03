@@ -5,10 +5,8 @@ import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.system.domain.LAnnouncement;
 import com.ruoyi.system.domain.LMaterial;
-import com.ruoyi.system.service.ILStudentAccountService;
-import com.ruoyi.system.service.ILTeacherAccountService;
-import com.ruoyi.system.service.impl.LAnnouncementServiceImpl;
-import com.ruoyi.system.service.impl.LMaterialServiceImpl;
+import com.ruoyi.system.service.ILAnnouncementService;
+import com.ruoyi.system.service.ILMaterialService;
 import com.ruoyi.web.controller.dto.PageDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,16 +32,10 @@ import java.util.Map;
 public class LearningIndex extends BaseController {
 
     @Autowired
-    private ILStudentAccountService studentAccountService;
+    private ILMaterialService materialService;
 
     @Autowired
-    private ILTeacherAccountService teacherAccountService;
-
-    @Autowired
-    private LMaterialServiceImpl materialService;
-
-    @Autowired
-    private LAnnouncementServiceImpl announcementService;
+    private ILAnnouncementService announcementService;
 
     private static final String prefix = "learning/theme/";
 

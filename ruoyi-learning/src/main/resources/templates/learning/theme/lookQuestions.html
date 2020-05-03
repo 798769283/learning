@@ -12,29 +12,23 @@
 <body>
 <div class="download-main">
 	<h3 style="text-align: center;"><strong th:text="${title}"></strong></h3>
-	<div th:fragment="download" id="download">
+	<div th:fragment="questionCategories" id="questionCategories">
 		<table class="table table-hover table-condensed" >
 			<th class="active">考试名称</th>
-			<th class="active">简介</th>
-			<th class="active">上传时间</th>
-			<th class="active">下载</th>
-			<tr th:each="material : ${materialsList}">
-				<td><a href="#" th:text="${material.name}" th:onclick="|switchPages('/learning/materialLook',${material.id})|"></a></td>
-				<td th:text="${material.introduction}"></td>
-				<td th:text="${#dates.format(material.createTime,'yyyy-MM-dd hh:mm')}"></td>
-				<td><a href="#" th:href="@{${material.fileUrl}}" style="color: red;">down</a></td>
+			<tr th:each="questionCategorie : ${questionCategories}">
+				<td><a href="#" th:text="${questionCategorie.name}" th:onclick="|switchPages('/learning/materialLook',${questionCategorie.id})|"></a></td>
 			</tr>
 		</table>
 		<nav aria-label="Page navigation" class="pagination-1">
 			<ul class="pagination">
 				<li th:if="${pageDTO.currentSize != 1}">
-					<a href="#"  th:onclick="|asynGetMaterial(${pageDTO.currentSize-1},'-1',${materialsList[0].status},'download::download')|">
+					<a href="#"  th:onclick="|asynGetQuestions(${pageDTO.currentSize-1},'-1','lookQuestions::questionCategories')|">
 						<span aria-hidden="true">&laquo;</span>
 					</a>
 				</li>
-				<li th:each="i:${#numbers.sequence(1, pageDTO.pages)}" th:class="${pageDTO.currentSize== i}?'active': '' "><a href="#" th:onclick="|asynGetMaterial(${i},${pageDTO.currentSize},${materialsList[0].status},'download::download')|" th:text="${i}"></a></li>
+				<li th:each="i:${#numbers.sequence(1, pageDTO.pages)}" th:class="${pageDTO.currentSize== i}?'active': '' "><a href="#" th:onclick="|asynGetQuestions(${i},${pageDTO.currentSize},'lookQuestions::questionCategories')|" th:text="${i}"></a></li>
 				<li th:if="${pageDTO.currentSize != pageDTO.pages}">
-					<a href="#"  th:onclick="|asynGetMaterial(${pageDTO.currentSize+1},'-1',${materialsList[0].status},'download::download')|">
+					<a href="#"  th:onclick="|asynGetQuestions(${pageDTO.currentSize+1},'-1','lookQuestions::questionCategories')|">
 						<span aria-hidden="true">&raquo;</span>
 					</a>
 				</li>
@@ -50,13 +44,13 @@
 	}
 
 	// 异步加载分页数据
-	function asynGetMaterial(currentSize,b,type,url) {
+	function asynGetQuestions(currentSize,b,url) {
 		// 判断点击的是否是当前页，如果是前端就拒绝不要跑后端了
 		if (currentSize==b){
 			return false;
 		}
-		$.post("/learning/download/asynGetMaterial",{currentSize:currentSize,type:type,url:url},function (data) {
-			$("#download").html(data);
+		$.post("/learning/lookQuestions/asynGetMaterial",{currentSize:currentSize,url:url},function (data) {
+			$("#questionCategories").html(data);
 		})
 	}
 </script>

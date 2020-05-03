@@ -10,10 +10,7 @@ import com.ruoyi.web.controller.dto.PageDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,8 +55,8 @@ public class OnlineTestController extends BaseController {
      * @param url 返回的路径
      * @return
      */
-    @PostMapping("/lookQuestions/asynGetMaterial")
-    public String asynGetMaterial(Model model, int currentSize, String url){
+    @PostMapping("/lookQuestions/asynGetQuestions")
+    public String asynGetQuestions(Model model, int currentSize, String url){
         Map<String, Object> map = selectMaterials(currentSize);
         model.addAttribute("materialsList", map.get("materials"));
         model.addAttribute("pageDTO", map.get("pageDTO"));
@@ -92,8 +89,8 @@ public class OnlineTestController extends BaseController {
      * 在线自测页
      * @return
      */
-    @GetMapping("/onlineTest")
-    public String getOnlineTest(){
+    @GetMapping("/onlineTest/{id}")
+    public String getOnlineTest(Model model, @PathVariable String id){
         return prefix+"onlineTest";
     }
 

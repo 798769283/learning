@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.LClassMapper">
+    
+    <resultMap type="LClass" id="LClassResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="dId"    column="d_id"    />
+    </resultMap>
+
+    <sql id="selectLClassVo">
+        select id, name, d_id from l_class
+    </sql>
+
+    <select id="selectLClassList" parameterType="LClass" resultMap="LClassResult">
+        <include refid="selectLClassVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="dId != null "> and d_id = #{dId}</if>
+        </where>
+    </select>
+    
+    <select id="selectLClassById" parameterType="Long" resultMap="LClassResult">
+        <include refid="selectLClassVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertLClass" parameterType="LClass" useGeneratedKeys="true" keyProperty="id">
+        insert into l_class
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null  and name != ''">name,</if>
+            <if test="dId != null ">d_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="dId != null ">#{dId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLClass" parameterType="LClass">
+        update l_class
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''">name = #{name},</if>
+            <if test="dId != null ">d_id = #{dId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLClassById" parameterType="Long">
+        delete from l_class where id = #{id}
+    </delete>
+
+    <delete id="deleteLClassByIds" parameterType="String">
+        delete from l_class where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

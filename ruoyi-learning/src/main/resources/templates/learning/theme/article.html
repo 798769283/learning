@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+	<head>
+		<meta charset="UTF-8">
+		<title>查看最新文章</title>
+	</head>
+	<link rel="stylesheet" href="/css/main.css" />
+	<link rel="stylesheet" href="/css/bootstrap.css" />
+	<link rel="stylesheet" href="/css/bootstrap.min.css" />
+	<link href="/ajax/libs/summernote/summernote.css" rel="stylesheet"/>
+	<link href="/ajax/libs/summernote/summernote-bs3.css" rel="stylesheet"/>
+	<body>
+		<div class="download-main" th:object="${announcement}">
+			<ol class="breadcrumb">
+			  <li>查看最新文章</li>
+			</ol>
+			<h3 style="text-align: center;"><strong th:text="*{title}"></strong><kbd th:text="*{#dates.format(createTime,'yyyy-MM-dd hh:mm')}" style="font-size: 12px;float: right;margin-right: 20px;margin-top: 15px">dsdsadasds</kbd></h3>
+			<input type="hidden" id="article_content" th:field="*{content}">
+			<div class="activeBox" id="summernote">
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript" src="/js/jquery-3.2.1.min.js"></script>
+	<script src="/ajax/libs/summernote/summernote.min.js"></script>
+	<script src="/ajax/libs/summernote/summernote-zh-CN.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			var content = $("#article_content").val();
+			console.log(content)
+			$("#summernote").html(content);
+		});
+	</script>
+</html>

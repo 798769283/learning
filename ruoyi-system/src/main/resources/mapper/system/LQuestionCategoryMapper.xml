@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.LQuestionCategoryMapper">
+    
+    <resultMap type="LQuestionCategory" id="LQuestionCategoryResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="cId"    column="c_id"    />
+    </resultMap>
+
+    <sql id="selectLQuestionCategoryVo">
+        select id, name, c_id from l_question_category
+    </sql>
+
+    <select id="selectLQuestionCategoryList" parameterType="LQuestionCategory" resultMap="LQuestionCategoryResult">
+        <include refid="selectLQuestionCategoryVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="cId != null "> and c_id = #{cId}</if>
+        </where>
+    </select>
+    
+    <select id="selectLQuestionCategoryById" parameterType="Long" resultMap="LQuestionCategoryResult">
+        <include refid="selectLQuestionCategoryVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertLQuestionCategory" parameterType="LQuestionCategory" useGeneratedKeys="true" keyProperty="id">
+        insert into l_question_category
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null  and name != ''">name,</if>
+            <if test="cId != null ">c_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="cId != null ">#{cId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLQuestionCategory" parameterType="LQuestionCategory">
+        update l_question_category
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''">name = #{name},</if>
+            <if test="cId != null ">c_id = #{cId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLQuestionCategoryById" parameterType="Long">
+        delete from l_question_category where id = #{id}
+    </delete>
+
+    <delete id="deleteLQuestionCategoryByIds" parameterType="String">
+        delete from l_question_category where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

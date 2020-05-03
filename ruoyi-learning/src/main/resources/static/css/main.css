@@ -1,0 +1,48 @@
+.main-top{
+	height: 350px;
+	width: 100%;
+	border: 2px solid #f5f5dc;
+}
+.main-top table{
+	text-align: center;
+}
+.main-top th{
+	text-align: center;
+}
+.main-bottom{
+	height: 350px;
+	width: 100%;
+	margin-top: 5px;
+	border: 2px solid #f5f5dc;
+}
+.main-bottom table{
+	text-align: center;
+}
+.main-bottom th{
+	text-align: center;
+}
+.pagination-1{
+	text-align: center;
+}
+.download-main{
+	height: 760px;
+	width: 100%;
+	border: 2px solid #f5f5dc;
+}
+.download-main table{
+	text-align: center;
+}
+.download-main th{
+	text-align: center;
+}
+.main2-from{
+	width: 500px;
+	height: 280px;
+	border: 2px solid #f5f5dc;
+	margin-left: auto;
+	margin-right: auto;
+}
+.activeBox{
+	width: 100%;
+	height: 650px;
+}

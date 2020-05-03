@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('新增考题')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-questions-add">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">题目：</label>
+                <div class="col-sm-8">
+                    <textarea name="name" class="form-control" type="text"></textarea>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">A-选择：</label>
+                <div class="col-sm-8">
+                    <input name="optionA" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">B-选择：</label>
+                <div class="col-sm-8">
+                    <input name="optionB" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">C-选择：</label>
+                <div class="col-sm-8">
+                    <input name="optionC" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">D-选择：</label>
+                <div class="col-sm-8">
+                    <input name="optionD" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">E-选择：</label>
+                <div class="col-sm-8">
+                    <input name="optionE" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">F-选择：</label>
+                <div class="col-sm-8">
+                    <input name="optionF" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">答案：</label>
+                <div class="col-sm-8">
+                    <input name="answer" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">分数：</label>
+                <div class="col-sm-8">
+                    <input name="fraction" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label is-required">考题分类：</label>
+                <div class="col-sm-8">
+                    <select name="qCId" class="form-control m-b" th:with="questionCategorys=${@questionCategory.selectLQuestionCategoryList(null)}">
+                        <option value="">所有</option>
+                        <option th:each="questionCategory : ${questionCategorys}" th:text="${questionCategory.name}" th:value="${questionCategory.id}" ></option>
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script type="text/javascript">
+        var prefix = ctx + "system/questions"
+        $("#form-questions-add").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/add", $('#form-questions-add').serialize());
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+.main{
+	width: 1020px; 
+	height: 1000px; 
+	margin-left: auto;
+	margin-right: auto;
+}
+.main-left{
+	width: 255px;
+	height: 308px;
+	border: 2px solid #f5f5dc;
+	float: left;
+}
+.main-left2{
+	width: 255px;
+	height: 250px;
+	border: 2px solid #f5f5dc;
+	float: left;
+	margin: 313px -255px;
+}
+.main-left3{
+	width: 255px;
+	height:365px;
+	border: 2px solid #f5f5dc;
+	float: left;
+	margin: 583px -255px;
+}
+.main-right{
+	width: 755px;
+	float: right;
+	height: 760px;
+}
+.login{
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 100px;
+	font-size: 16px;
+	width: 200px;
+	height: 60px;
+}

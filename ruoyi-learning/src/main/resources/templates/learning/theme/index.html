@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+	<head>
+		<meta charset="utf-8" />
+		<title>在线学习网站</title>
+		<link rel="stylesheet" th:href="@{css/bootstrap-theme.css}" />
+		<link rel="stylesheet" th:href="@{css/bootstrap-theme.min.css}" />
+		<link rel="stylesheet" th:href="@{css/bootstrap.css}"  />
+		<link rel="stylesheet" th:href="@{css/bootstrap.min.css}" />
+		<link rel="stylesheet" th:href="@{css/index.css}" />
+		<link rel="stylesheet" type="text/css" th:href="@{css/print.css}"  media="print">
+		<link rel="stylesheet" type="text/css" th:href="@{css/simple-calendar.css}">
+	</head>
+	<body>
+		<nav class="navbar navbar-default">
+		  <div class="container">
+		    <ul class="nav nav-tabs">
+			  		<li role="presentation"><a href="/learning">首页</a></li>
+			  		<li role="presentation"><a href="#" onclick="switchPages('learning/download/1')">下载作业</a></li>
+			  		<li role="presentation"><a href="#" onclick="switchPages('learning/download/0')">资料下载</a></li>
+			  		<li role="presentation"><a href="#" onclick="switchPages('learning/download/2')">教学视频</a></li>
+			  		<li role="presentation"><a href="#" onclick="switchPages('learning/onlineTest')">在线自测</a></li>
+			  		<li role="presentation"><a href="#" onclick="switchPages('learning/interactive')">师生互动</a></li>
+			  		<li role="presentation"><a href="/index" target="_blank">后台管理</a></li>
+				</ul>
+		  </div>
+		</nav>
+		<div class="main">
+		  	<div class="main-left">
+				<div class="login" th:if="${session.user!=null}">
+					<b>
+						登录用户 :<span th:text="${session.user.username}"></span>
+					</b><br>
+					<b>身份 : <span th:text="${session.user.userType}"></span>
+					</b><br>
+					<b>学号(教师号) : <input type="hidden" id="userId" th:text="${session.user.id}">
+					</b><br>
+					<b><a href="#" id="signOut">退出登录</a> </b>
+				</div>
+				<div th:if="${session.user==null}">
+					<h3 style="text-align: center;"><strong>用户登录</strong></h3>
+						<div class="form-group" style="margin-left: 30px;">
+							<label>用户名</label>
+							<input type="text" 	  name="username"  class="form-control"    style="width: 180px; height: 30px;"   id="username" placeholder="用户名">
+						</div>
+						<div class="form-group" style="margin-left: 30px;">
+							<label>用户密码</label>
+							<input type="password" name="password" class="form-control" style="width: 180px; height: 30px;" id="password" placeholder="密码">
+						</div>
+						<div class="form-group" style="margin-left: 30px;">
+							<label>选择用户</label>
+							<select name="id" id="id" class="form-control" style="width: 180px; height: 32px;" data-style="btn-inverse">
+									<option th:text="老师" th:value="0"></option>
+									<option th:text="学生" th:value="1"></option>
+							</select>
+						</div>
+						<a href="#" id="login" class="btn btn-default" style="margin-left: 40px;">登陆</a>
+						<a href="learning/register"class="btn btn-default" style="margin-left: 40px;">注册</a>
+				</div>
+		  	</div>
+		  	<div class="main-left2">
+		  		<h3 style="text-align: center;"><strong>最新文章</strong></h3>
+		  		<a href="#" th:onclick="|switchPage('/learning/article',${announcement.id})|" class="list-group-item" th:each="announcement:${announcementList}" th:text="${announcement.title}">
+  				</a>
+		  	</div>
+		  	<div class="main-left3">
+		  		<h3 style="text-align: center;"><strong>日历表</strong></h3>
+		  		<div id = 'calendar'  >
+
+     			</div>
+		  	</div>
+		  	<div class="main-right">
+		  		<object id="object_main" type="text/x-scriptlet" data="learning/main" width="100%" height="100%"></object>
+		  	</div>
+		  </div>
+	</body>
+	<script th:src="@{js/jquery-1.10.2.js}"></script>
+	<script th:src="@{js/bootstrap.js}"></script>
+	<script th:src="@{js/bootstrap.min.js}"></script>
+	<script th:src="@{js/simple-calendar.js}"></script>
+    <script>
+	     var myCalendar = new SimpleCalendar('#calendar');
+	     myCalendar.updateSize('250px', '250px');
+	     // 切换菜单
+	     function switchPages(url){
+	     	//异步判断一下用户是否登录
+			 $.get("/learning/judgeUser",{},function (data) {
+				 if (data.code == 0){
+					 $("#object_main").attr("data",url);
+				 }else {
+					 alert(data.msg);
+				 }
+			 })
+	     }
+
+	     // 切换菜单 带参数
+		 function switchPage(url,param){
+			 $("#object_main").attr("data",url+"/"+param);
+		 }
+	     // 退出登录
+		 $("#signOut").click(function () {
+			 var userId = $('#userId').val();
+			$.get("/learning/signOut",{},
+					function (data,status) {
+						if (data.code == 0){
+							alert(data.msg);
+							window.location.reload();
+						}else {
+							alert(data.msg);
+						}
+					})
+		 })
+
+		 // 异步登陆
+	     $("#login").click(function () {
+			 var password = $('#password').val();
+			 var username = $('#username').val();
+			 var userType = $('#id').val();
+ 			 $.post("/learning/login",
+					 {
+						 password : password,
+						 username : username,
+						 userType : userType
+					 },
+					 function(data,status) {
+						 if (data.code == 0){
+							 alert(data.msg);
+							 window.location.reload();
+						 }else {
+							 alert(data.msg);
+						 }
+					 }
+			 );
+		 })
+    </script>
+</html>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.LTeacherMapper">
+    
+    <resultMap type="LTeacher" id="LTeacherResult">
+        <result property="id"    column="id"    />
+        <result property="teacherId"    column="teacher_id"    />
+        <result property="name"    column="name"    />
+        <result property="sex"    column="sex"    />
+        <result property="age"    column="age"    />
+        <result property="dId"    column="d_id"    />
+    </resultMap>
+
+    <sql id="selectLTeacherVo">
+        select id, teacher_id, name, sex, age, d_id from l_teacher
+    </sql>
+
+    <select id="selectLTeacherList" parameterType="LTeacher" resultMap="LTeacherResult">
+        <include refid="selectLTeacherVo"/>
+        <where>  
+            <if test="teacherId != null  and teacherId != ''"> and teacher_id = #{teacherId}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="sex != null  and sex != ''"> and sex = #{sex}</if>
+            <if test="age != null "> and age = #{age}</if>
+            <if test="dId != null "> and d_id = #{dId}</if>
+        </where>
+    </select>
+    
+    <select id="selectLTeacherById" parameterType="Long" resultMap="LTeacherResult">
+        <include refid="selectLTeacherVo"/>
+        where id = #{id}
+    </select>
+    <select id="selectLTeacherByTearcherId" parameterType="String" resultMap="LTeacherResult" >
+        <include refid="selectLTeacherVo"/>
+        where teacher_id = #{teacherId}
+    </select>
+    <insert id="insertLTeacher" parameterType="LTeacher" useGeneratedKeys="true" keyProperty="id">
+        insert into l_teacher
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="teacherId != null  and teacherId != ''">teacher_id,</if>
+            <if test="name != null  and name != ''">name,</if>
+            <if test="sex != null  and sex != ''">sex,</if>
+            <if test="age != null ">age,</if>
+            <if test="dId != null ">d_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="teacherId != null  and teacherId != ''">#{teacherId},</if>
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="sex != null  and sex != ''">#{sex},</if>
+            <if test="age != null ">#{age},</if>
+            <if test="dId != null ">#{dId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLTeacher" parameterType="LTeacher">
+        update l_teacher
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="teacherId != null  and teacherId != ''">teacher_id = #{teacherId},</if>
+            <if test="name != null  and name != ''">name = #{name},</if>
+            <if test="sex != null  and sex != ''">sex = #{sex},</if>
+            <if test="age != null ">age = #{age},</if>
+            <if test="dId != null ">d_id = #{dId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLTeacherById" parameterType="Long">
+        delete from l_teacher where id = #{id}
+    </delete>
+
+    <delete id="deleteLTeacherByIds" parameterType="String">
+        delete from l_teacher where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

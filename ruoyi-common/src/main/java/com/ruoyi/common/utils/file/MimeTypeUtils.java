@@ -32,7 +32,11 @@ public class MimeTypeUtils
             // 压缩文件
             "rar", "zip", "gz", "bz2",
             // pdf
-            "pdf" };
+            "pdf",
+            // 视频
+            "swf", "flv", "mp3","mp4", "wav", "wma", "wmv", "mid", "avi", "mpg",
+            "asf", "rm", "rmvb"
+        };
 
     public static String getExtension(String prefix)
     {

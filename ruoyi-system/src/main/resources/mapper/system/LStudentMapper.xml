@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.LStudentMapper">
+    
+    <resultMap type="LStudent" id="LStudentResult">
+        <result property="id"    column="id"    />
+        <result property="studentId"    column="student_id"    />
+        <result property="name"    column="name"    />
+        <result property="sex"    column="sex"    />
+        <result property="cId"    column="c_id"    />
+        <result property="startYear"    column="start_year"    />
+    </resultMap>
+
+    <sql id="selectLStudentVo">
+        select id, student_id, name, sex, c_id, start_year from l_student
+    </sql>
+
+    <select id="selectLStudentList" parameterType="LStudent" resultMap="LStudentResult">
+        <include refid="selectLStudentVo"/>
+        <where>  
+            <if test="studentId != null  and studentId != ''"> and student_id = #{studentId}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="sex != null  and sex != ''"> and sex = #{sex}</if>
+            <if test="cId != null "> and c_id = #{cId}</if>
+            <if test="startYear != null "> and start_year = #{startYear}</if>
+        </where>
+    </select>
+    
+    <select id="selectLStudentById" parameterType="Long" resultMap="LStudentResult">
+        <include refid="selectLStudentVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectLStudentByStudentId" parameterType="String" resultMap="LStudentResult">
+        <include refid="selectLStudentVo"/>
+        where student_id = #{studentId}
+    </select>
+    <insert id="insertLStudent" parameterType="LStudent" useGeneratedKeys="true" keyProperty="id">
+        insert into l_student
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="studentId != null  and studentId != ''">student_id,</if>
+            <if test="name != null  and name != ''">name,</if>
+            <if test="sex != null  and sex != ''">sex,</if>
+            <if test="cId != null ">c_id,</if>
+            <if test="startYear != null ">start_year,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="studentId != null  and studentId != ''">#{studentId},</if>
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="sex != null  and sex != ''">#{sex},</if>
+            <if test="cId != null ">#{cId},</if>
+            <if test="startYear != null ">#{startYear},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLStudent" parameterType="LStudent">
+        update l_student
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="studentId != null  and studentId != ''">student_id = #{studentId},</if>
+            <if test="name != null  and name != ''">name = #{name},</if>
+            <if test="sex != null  and sex != ''">sex = #{sex},</if>
+            <if test="cId != null ">c_id = #{cId},</if>
+            <if test="startYear != null ">start_year = #{startYear},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLStudentById" parameterType="Long">
+        delete from l_student where id = #{id}
+    </delete>
+
+    <delete id="deleteLStudentByIds" parameterType="String">
+        delete from l_student where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

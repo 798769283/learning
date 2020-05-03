@@ -78,7 +78,13 @@
             <groupId>com.ruoyi</groupId>
             <artifactId>ruoyi-generator</artifactId>
         </dependency>
-        
+
+        <!-- 在线学习前台 -->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>ruoyi-learning</artifactId>
+            <version>4.2.0</version>
+        </dependency>
     </dependencies>
 
     <build>

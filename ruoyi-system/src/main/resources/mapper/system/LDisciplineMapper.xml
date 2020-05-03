@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.LDisciplineMapper">
+    
+    <resultMap type="LDiscipline" id="LDisciplineResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="introduction"    column="Introduction"    />
+    </resultMap>
+
+    <sql id="selectLDisciplineVo">
+        select id, name, Introduction from l_discipline
+    </sql>
+
+    <select id="selectLDisciplineList" parameterType="LDiscipline" resultMap="LDisciplineResult">
+        <include refid="selectLDisciplineVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="introduction != null  and introduction != ''"> and Introduction = #{introduction}</if>
+        </where>
+    </select>
+    
+    <select id="selectLDisciplineById" parameterType="Long" resultMap="LDisciplineResult">
+        <include refid="selectLDisciplineVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertLDiscipline" parameterType="LDiscipline" useGeneratedKeys="true" keyProperty="id">
+        insert into l_discipline
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null  and name != ''">name,</if>
+            <if test="introduction != null  and introduction != ''">Introduction,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="introduction != null  and introduction != ''">#{introduction},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLDiscipline" parameterType="LDiscipline">
+        update l_discipline
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''">name = #{name},</if>
+            <if test="introduction != null  and introduction != ''">Introduction = #{introduction},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLDisciplineById" parameterType="Long">
+        delete from l_discipline where id = #{id}
+    </delete>
+
+    <delete id="deleteLDisciplineByIds" parameterType="String">
+        delete from l_discipline where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

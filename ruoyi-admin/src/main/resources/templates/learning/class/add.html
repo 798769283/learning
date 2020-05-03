@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('新增班级')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-class-add">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">班级名字：</label>
+                <div class="col-sm-8">
+                    <input name="name" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label is-required">选择专业：</label>
+                <div class="col-sm-8">
+                    <select name="dId" class="form-control m-b" th:with="disciplines=${@discipline.selectLDisciplineList(null)}">
+                        <option value="">所有</option>
+                        <option th:each="discipline : ${disciplines}" th:text="${discipline.name}" th:value="${discipline.id}"></option>
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script type="text/javascript">
+        var prefix = ctx + "system/class"
+        $("#form-class-add").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/add", $('#form-class-add').serialize());
+            }
+        }
+    </script>
+</body>
+</html>

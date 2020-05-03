@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<meta charset="UTF-8">
+	<title>学生菜单</title>
+	<link rel="stylesheet" href="/css/main.css"   />
+	<link rel="stylesheet" href="/css/bootstrap-theme.css"  />
+	<link rel="stylesheet" href="/css/bootstrap-theme.min.css"  />
+	<link rel="stylesheet" href="/css/bootstrap.css"    />
+	<link rel="stylesheet" href="/css/bootstrap.min.css"  />
+</head>
+<body>
+<div class="main-top" th:fragment="work">
+	<h3 style="text-align: center;"><strong>最新作业</strong></h3>
+	<table class="table table-hover">
+		<th class="active">名称</th>
+		<th class="active">简介</th>
+		<th class="active">上传时间</th>
+		<th class="active" th:if="${session.user!=null}">下载</th>
+		<tr th:each="material : ${materialsWork}">
+			<td th:text="${material.name}"></td>
+			<td th:text="${material.introduction}"></td>
+			<td th:text="${#dates.format(material.createTime,'yyyy-MM-dd hh:mm')}"></td>
+			<td><a href="#" th:if="${session.user!=null}" th:href="@{${material.fileUrl}}" style="color: red;">down</a></td>
+		</tr>
+	</table>
+	<nav aria-label="Page navigation" class="pagination-1">
+		<ul class="pagination" style="margin: 0 0">
+			<li th:if="${pageDTOWork.currentSize != 1}">
+				<a href="#"  th:onclick="|asynGetMaterial(${pageDTOWork.currentSize-1},'-1','1','main::work')|">
+					<span aria-hidden="true">&laquo;</span>
+				</a>
+			</li>
+			<li th:each="i:${#numbers.sequence(1, pageDTOWork.pages)}" th:class="${pageDTOWork.currentSize== i}?'active': '' "><a href="#" th:onclick="|asynGetMaterial(${i},${pageDTOWork.currentSize},'1','main::work')|" th:text="${i}"></a></li>
+			<li th:if="${pageDTOWork.currentSize != pageDTOWork.pages}">
+				<a href="#"  th:onclick="|asynGetMaterial(${pageDTOWork.currentSize+1},'-1','1','main::work')|">
+					<span aria-hidden="true">&raquo;</span>
+				</a>
+			</li>
+		</ul>
+	</nav>
+</div>
+<div class="main-bottom" th:fragment="material">
+	<h3 style="text-align: center;"><strong>最新资料</strong></h3>
+	<table class="table table-hover table-condensed" >
+		<th class="active" >名称</th>
+		<th class="active">   </th>
+		<th class="active">   </th>
+		<th class="active">上传时间</th>
+		<tr th:each="material :${materialsList}">
+			<td th:text="${material.name}"></td>
+			<td></td>
+			<td></td>
+			<td th:text="${#dates.format(material.createTime,'yyyy-MM-dd hh:mm')}"></td>
+		</tr>
+	</table>
+	<nav aria-label="Page navigation" class="pagination-1">
+		<ul class="pagination">
+			<li th:if="${pageDTOMaterial.currentSize != 1}">
+				<a href="#"  th:onclick="|asynGetMaterial(${pageDTOMaterial.currentSize-1},'-1','0','main::material')|">
+					<span aria-hidden="true">&laquo;</span>
+				</a>
+			</li>
+			<li th:each="i:${#numbers.sequence(1, pageDTOMaterial.pages)}" th:class="${pageDTOMaterial.currentSize== i}?'active': '' "><a href="#" th:onclick="|asynGetMaterial(${i},${pageDTOMaterial.currentSize},'0','main::material')|" th:text="${i}"></a></li>
+			<li th:if="${pageDTOMaterial.currentSize != pageDTOMaterial.pages}">
+				<a href="#"  th:onclick="|asynGetMaterial(${pageDTOMaterial.currentSize+1},'-1','0','main::material')|">
+					<span aria-hidden="true">&raquo;</span>
+				</a>
+			</li>
+		</ul>
+	</nav>
+</div>
+</body>
+<script src="/js/jquery-1.10.2.js" ></script>
+<script src="/js/bootstrap.js" ></script>
+<script src="/js/bootstrap.min.js" ></script>
+<script>
+
+	// 异步加载分页数据
+	function asynGetMaterial(currentSize,b,type,url) {
+		// 判断点击的是否是当前页，如果是前端就拒绝不要跑后端了
+		if (currentSize==b){
+			return false;
+		}
+		$.post("/learning/asynGetMaterial",{currentSize:currentSize,type:type,url:url},function (data) {
+			if (type==1){
+				$(".main-top").html(data);
+			}else if (type==0){
+				$(".main-bottom").html(data);
+			}
+		})
+	}
+</script>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+	<head>
+		<meta charset="UTF-8">
+		<title>查看作业和资料并且下载</title>
+	</head>
+	<link rel="stylesheet" href="/css/main.css"   />
+	<link rel="stylesheet" href="/css/bootstrap-theme.css"  />
+	<link rel="stylesheet" href="/css/bootstrap-theme.min.css"  />
+	<link rel="stylesheet" href="/css/bootstrap.css"    />
+	<link rel="stylesheet" href="/css/bootstrap.min.css"  />
+	<body>
+		<div class="download-main"> `
+			<ol class="breadcrumb">
+			  <li><a href="#" onclick="switchPages('learning/download')"  th:text="${breadCrumb[0]}"></a></li>
+			  <li class="active" th:text="${breadCrumb[1]}"></li>
+			</ol>
+			<h3 style="text-align: center;"><strong th:text="${material.name}"></strong></h3>
+			<h4 style="text-align: center;margin-top: 20px"><strong>简介</strong></h4>
+			<blockquote>
+				<p th:text="${material.introduction}"></p>
+			</blockquote>
+			<blockquote th:if="${breadCrumb[2] != ''}">
+				<p th:text="${breadCrumb[2]}"></p>
+			</blockquote>
+			<a class="media" th:href="${material.fileUrl}" href=""></a>
+		</div>
+	</body>
+	<script src="/js/jquery-3.2.1.min.js" ></script>
+	<script src="/js/jquery.media.js" ></script>
+	<script type="text/javascript">
+		// 跳转到查看资料页面
+		function switchPages(url){
+			window.parent.switchPages(url+"/"+[[${material.status}]]);
+		}
+		$(function() {
+			$('a.media').media({width:730, height:700});
+		});
+	</script>
+</html>

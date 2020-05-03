@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.LAnnouncementMapper">
+    
+    <resultMap type="LAnnouncement" id="LAnnouncementResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="content"    column="content"    />
+    </resultMap>
+
+    <sql id="selectLAnnouncementVo">
+        select id, title, create_time, content from l_announcement
+    </sql>
+
+    <select id="selectLAnnouncementList" parameterType="LAnnouncement" resultMap="LAnnouncementResult">
+        <include refid="selectLAnnouncementVo"/>
+        <where>  
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+        </where>
+    </select>
+    
+    <select id="selectLAnnouncementById" parameterType="Long" resultMap="LAnnouncementResult">
+        <include refid="selectLAnnouncementVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertLAnnouncement" parameterType="LAnnouncement" useGeneratedKeys="true" keyProperty="id">
+        insert into l_announcement
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null  and title != ''">title,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="content != null  and content != ''">content,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null  and title != ''">#{title},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="content != null  and content != ''">#{content},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLAnnouncement" parameterType="LAnnouncement">
+        update l_announcement
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null  and title != ''">title = #{title},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="content != null  and content != ''">content = #{content},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLAnnouncementById" parameterType="Long">
+        delete from l_announcement where id = #{id}
+    </delete>
+
+    <delete id="deleteLAnnouncementByIds" parameterType="String">
+        delete from l_announcement where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

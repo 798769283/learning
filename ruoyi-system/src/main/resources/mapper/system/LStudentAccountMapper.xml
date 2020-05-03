@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.LStudentAccountMapper">
+    
+    <resultMap type="LStudentAccount" id="LStudentAccountResult">
+        <result property="id"    column="id"    />
+        <result property="studentId"    column="student_id"    />
+        <result property="name"    column="name"    />
+        <result property="password"    column="password"    />
+    </resultMap>
+
+    <sql id="selectLStudentAccountVo">
+        select id, student_id, name, password from l_student_account
+    </sql>
+
+    <select id="selectLStudentAccountList" parameterType="LStudentAccount" resultMap="LStudentAccountResult">
+        <include refid="selectLStudentAccountVo"/>
+        <where>  
+            <if test="studentId != null and studentId != '' "> and student_id = #{studentId}</if>
+            <if test="name != null  and name != ''"> and name = #{name}</if>
+            <if test="password != null  and password != ''"> and password = #{password}</if>
+        </where>
+    </select>
+    
+    <select id="selectLStudentAccountById" parameterType="Long" resultMap="LStudentAccountResult">
+        <include refid="selectLStudentAccountVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectLStudentAccountByName" parameterType="String" resultMap="LStudentAccountResult">
+        <include refid="selectLStudentAccountVo"/>
+        where name = #{username}
+    </select>
+
+    <select id="selectLStudentAccountByStudentId" parameterType="String" resultMap="LStudentAccountResult">
+        <include refid="selectLStudentAccountVo"/>
+        where student_id = #{studentId}
+    </select>
+    <insert id="insertLStudentAccount" parameterType="LStudentAccount" useGeneratedKeys="true" keyProperty="id">
+        insert into l_student_account
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="studentId != null and studentId != ''">student_id,</if>
+            <if test="name != null  and name != ''">name,</if>
+            <if test="password != null  and password != ''">password,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="studentId != null and studentId != ''">#{studentId},</if>
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="password != null  and password != ''">#{password},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLStudentAccount" parameterType="LStudentAccount">
+        update l_student_account
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="studentId != null and studentId != ''">student_id = #{studentId},</if>
+            <if test="name != null  and name != ''">name = #{name},</if>
+            <if test="password != null  and password != ''">password = #{password},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLStudentAccountById" parameterType="Long">
+        delete from l_student_account where id = #{id}
+    </delete>
+
+    <delete id="deleteLStudentAccountByIds" parameterType="String">
+        delete from l_student_account where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

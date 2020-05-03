@@ -2,11 +2,108 @@ var HH = 0;//时
 var mm = 0;//分
 var ss = 0;//秒
 var timeState = true;//时间状态 默认为true 开启时间
-var questions= QuestionJosn;
+var questions =[];
 var itemList=["A","B","C","D"]
 var activeQuestion=0; //当前操作的考题编号
 var questioned = 0; //
 var checkQues = []; //已做答的题的集合
+$(function(){
+    $(".middle-top-left").width($(".middle-top").width()-$(".middle-top-right").width())
+    $(".progress-left").width($(".middle-top-left").width()-200);
+    // 获取questionJson
+    var questionJson =$("#questionId").val();
+    questions=$.parseJSON(questionJson);
+    // 同步加载考题
+    /*$.ajax({
+        url     : '/learning/getQuestions',
+        type    : 'get',
+        async   : false,
+        data    : {id:id},
+        success : function (data) {
+            questions=$.parseJSON(data);
+            alert("1---"+JSON.stringify(questions)+"----- questions数据");
+            alert("2----"+questions.length+"-----长度");
+        }
+    })*/
+    progress();
+    answerCard();
+    showQuestion(0);
+    /*alert(QuestionJosn.length);*/
+    /*实现进度条信息加载的动画*/
+    var str = '';
+    /*开启或者停止时间*/
+    $(".time-stop").click(function () {
+        timeState = false;
+        $(this).hide();
+        $(".time-start").show();
+    });
+    $(".time-start").click(function () {
+        timeState = true;
+        $(this).hide();
+        $(".time-stop").show();
+    });
+
+    /*收藏按钮的切换*/
+    $("#unHeart").click(function(){
+        $(this).hide();
+        $("#heart").show();
+    })
+    $("#heart").click(function(){
+        $(this).hide();
+        $("#unHeart").show();
+    })
+
+    /*答题卡的切换*/
+    $("#openCard").click(function(){
+        $("#closeCard").show();
+        $("#answerCard").slideDown();
+        $(this).hide();
+    })
+    $("#closeCard").click(function(){
+        $("#openCard").show();
+        $("#answerCard").slideUp();
+        $(this).hide();
+    })
+
+    //提交试卷
+    $("#submitQuestions").click(function(){
+        alert(JSON.stringify(checkQues));
+        alert("已做答:"+($(".clickQue").length)+"道题,还有"+(questions.length-($(".clickQue").length))+"道题未完成");
+        if($(".clickQue").length == questions.length){
+            // 答完之后比较
+            var correctAnswer=0;
+            for(var i=0; i<=questions.length-1;i++){
+                for(var j=0;j<=$(".clickQue").length-1;j++){
+                    // 获取已经选择题目的ID
+                    var questionId = JSON.stringify(checkQues[j].Questionid)
+                    var index = questionId.lastIndexOf('"')
+                    // 先判断题目是否一致
+                    if(questions[i].questionId==questionId.substring(1,index)){
+                        // 然后再比较答案是否一致
+                        var answer = JSON.stringify(checkQues[j].answer)
+                        if('"'+questions[i].questionAnswer+'"' == answer.toUpperCase()){
+                            correctAnswer++;
+                        }
+                    }
+                }
+            }
+            alert("答对题目:"+correctAnswer+"道题,得分:"+correctAnswer*5+"！！");
+        }
+    })
+    //进入下一题
+    $("#nextQuestion").click(function(){
+        if((activeQuestion+1)!=questions.length) showQuestion(activeQuestion+1);
+        showQuestion(activeQuestion)
+    })
+})
+/*// 获取json数组的长度
+function getJsonObjLength(jsonObj) {
+    var Length = 0;
+    for (var item in jsonObj) {
+        Length++;
+    }
+    return Length;
+}*/
 /*实现计时器*/
 var time = setInterval(function () {
     if (timeState) {
@@ -29,7 +126,7 @@ var time = setInterval(function () {
 //展示考卷信息
 function showQuestion(id){
     $(".questioned").text(id+1);
-    questioned = (id+1)/questions.length
+    questioned = (id+1)/questions.length;
     if(activeQuestion!=undefined){
         $("#ques"+activeQuestion).removeClass("question_id").addClass("active_question_id");
     }
@@ -37,7 +134,7 @@ function showQuestion(id){
     $(".question").find(".question_info").remove();
     var question = questions[id];
     $(".question_title").html("<strong>第 "+(id+1)+" 题 、</strong>"+question.questionTitle);
-    var items = question.questionItems.split(";");
+    var items = question.questionItems.split(";---");
     var item="";
     for(var i=0;i<items.length;i++){
         item ="<li class='question_info' onclick='clickTrim(this)' id='item"
@@ -114,57 +211,3 @@ function saveQuestionState(clickId){
     showQuestion(clickId)
 }
 
-$(function(){
-    $(".middle-top-left").width($(".middle-top").width()-$(".middle-top-right").width())
-    $(".progress-left").width($(".middle-top-left").width()-200);
-    progress();
-    answerCard();
-    showQuestion(0);
-    /*alert(QuestionJosn.length);*/
-    /*实现进度条信息加载的动画*/
-    var str = '';
-    /*开启或者停止时间*/
-    $(".time-stop").click(function () {
-        timeState = false;
-        $(this).hide();
-        $(".time-start").show();
-    });
-    $(".time-start").click(function () {
-        timeState = true;
-        $(this).hide();
-        $(".time-stop").show();
-    });
-
-    /*收藏按钮的切换*/
-    $("#unHeart").click(function(){
-        $(this).hide();
-        $("#heart").show();
-    })
-    $("#heart").click(function(){
-        $(this).hide();
-        $("#unHeart").show();
-    })
-
-    /*答题卡的切换*/
-    $("#openCard").click(function(){
-        $("#closeCard").show();
-        $("#answerCard").slideDown();
-        $(this).hide();
-    })
-    $("#closeCard").click(function(){
-        $("#openCard").show();
-        $("#answerCard").slideUp();
-        $(this).hide();
-    })
-
-    //提交试卷
-    $("#submitQuestions").click(function(){
-        alert(JSON.stringify(checkQues));
-        alert("已做答:"+($(".clickQue").length)+"道题,还有"+(questions.length-($(".clickQue").length))+"道题未完成");
-    })
-    //进入下一题
-    $("#nextQuestion").click(function(){
-        if((activeQuestion+1)!=questions.length) showQuestion(activeQuestion+1);
-        showQuestion(activeQuestion)
-    })
-})

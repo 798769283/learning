@@ -16,7 +16,7 @@
 		<table class="table table-hover table-condensed" >
 			<th class="active">考试名称</th>
 			<tr th:each="questionCategorie : ${questionCategories}">
-				<td><a href="#" th:text="${questionCategorie.name}" th:onclick="|switchPages('/learning/materialLook',${questionCategorie.id})|"></a></td>
+				<td><a href="#" th:text="${questionCategorie.name}" th:onclick="|switchPages('/learning/onlineTest',${questionCategorie.id})|"></a></td>
 			</tr>
 		</table>
 		<nav aria-label="Page navigation" class="pagination-1">
@@ -49,7 +49,7 @@
 		if (currentSize==b){
 			return false;
 		}
-		$.post("/learning/lookQuestions/asynGetMaterial",{currentSize:currentSize,url:url},function (data) {
+		$.post("/learning/lookQuestions/asynGetQuestions",{currentSize:currentSize,url:url},function (data) {
 			$("#questionCategories").html(data);
 		})
 	}

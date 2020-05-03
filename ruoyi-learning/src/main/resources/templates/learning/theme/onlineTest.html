@@ -13,7 +13,7 @@
 		<div class="content">
 			<div style="width: 100%;height:auto;display: inline-block;border: 1px solid white;position: relative;margin-top:10px;">
 				<div style="width: 100%;">
-					<div style="width: 80%;margin: 0px auto">
+					<div style="width: 100%;margin: 0px auto">
 						<div style="width: 100%;height:100px;border: 1px solid #CCC;border-bottom:none;background:#FFF;">
 							<div class="middle-top" style="width: 100%;height: 50px;border-bottom: 1px solid #CCC;background:#2D3339; position:relative;">
 								<div class="middle-top-left pull-left" style="height: 100%; padding-left: 20px; background: rgb(35, 44, 49); color: rgb(255, 255, 255); width: 855px;">
@@ -50,12 +50,12 @@
 						<div style="width: 100%;height:auto;display: inline-block;border: 1px solid #CCC;border-bottom:1px dashed #CCC;background:#FFF;">
 							<div style="width: 100%;height: 90%;padding:20px 20px 0px 20px;">
 								<ul class="list-unstyled question" id="question0" name="">
-									<li class="question_title"><strong>第 1 题 、</strong>下丘脑与腺垂体之间主要通过下列哪条途径联系？ </li>
-									<li class="question_info" onclick="clickTrim(this)" id="1"> <input type="radio" name="item" value="A" />&nbsp;A.神经纤维 </li>
-									<li class="question_info" onclick="clickTrim(this)" id="2"> <input type="radio" name="item" value="B" />&nbsp;B.神经纤维和门脉系统 </li>
-									<li class="question_info" onclick="clickTrim(this)" id="3"> <input type="radio" name="item" value="C" />&nbsp;C.垂体门脉系统 </li>
-									<li class="question_info" onclick="clickTrim(this)" id="4"> <input type="radio" name="item" value="D" />&nbsp;D.垂体束 </li>
-									<li class="question_info" onclick="clickTrim(this)" id="5"> <input type="radio" name="item" value="E" />&nbsp;E.轴浆运输 </li>
+									<li class="question_title"><strong>第 1 题 、</strong> </li>
+									<li class="question_info" onclick="clickTrim(this)" id="1"> <input type="radio" name="item" value="A" />&nbsp;A.</li>
+									<li class="question_info" onclick="clickTrim(this)" id="2"> <input type="radio" name="item" value="B" />&nbsp;B. </li>
+									<li class="question_info" onclick="clickTrim(this)" id="3"> <input type="radio" name="item" value="C" />&nbsp;C. </li>
+									<li class="question_info" onclick="clickTrim(this)" id="4"> <input type="radio" name="item" value="D" />&nbsp;D. </li>
+									<li class="question_info" onclick="clickTrim(this)" id="5"> <input type="radio" name="item" value="E" />&nbsp;E. </li>
 								</ul>
 								<div class="operation" style="margin-top: 20px;">
 									<div class="text-left" style="margin-left:20px;font-size: 15px;float: left;line-height: 30px;">
@@ -91,26 +91,7 @@
 									<div id="answerCard" style="display: none;">
 										<div class="panel-body form-horizontal" style="padding: 0px;">
 											<ul class="list-unstyled">
-												<li id="ques0" onclick="saveQuestionState(0)" class="questionId question_id">1</li>
-												<li id="ques1" onclick="saveQuestionState(1)" class="questionId">2</li>
-												<li id="ques2" onclick="saveQuestionState(2)" class="questionId">3</li>
-												<li id="ques3" onclick="saveQuestionState(3)" class="questionId">4</li>
-												<li id="ques4" onclick="saveQuestionState(4)" class="questionId">5</li>
-												<li id="ques5" onclick="saveQuestionState(5)" class="questionId">6</li>
-												<li id="ques6" onclick="saveQuestionState(6)" class="questionId">7</li>
-												<li id="ques7" onclick="saveQuestionState(7)" class="questionId">8</li>
-												<li id="ques8" onclick="saveQuestionState(8)" class="questionId">9</li>
-												<li id="ques9" onclick="saveQuestionState(9)" class="questionId">10</li>
-												<li id="ques10" onclick="saveQuestionState(10)" class="questionId">11</li>
-												<li id="ques11" onclick="saveQuestionState(11)" class="questionId">12</li>
-												<li id="ques12" onclick="saveQuestionState(12)" class="questionId">13</li>
-												<li id="ques13" onclick="saveQuestionState(13)" class="questionId">14</li>
-												<li id="ques14" onclick="saveQuestionState(14)" class="questionId">15</li>
-												<li id="ques15" onclick="saveQuestionState(15)" class="questionId">16</li>
-												<li id="ques16" onclick="saveQuestionState(16)" class="questionId">17</li>
-												<li id="ques17" onclick="saveQuestionState(17)" class="questionId">18</li>
-												<li id="ques18" onclick="saveQuestionState(18)" class="questionId">19</li>
-												<li id="ques19" onclick="saveQuestionState(19)" class="questionId">20</li>
+
 											</ul>
 										</div>
 									</div>
@@ -128,14 +109,12 @@
 		</div>
 	</div>
 	<div class="col-md-1"></div>
+	<textarea hidden th:text="${questionJosn}" id="questionId"></textarea>
 </div>
 <script src="/js/jquery-1.10.2.js" ></script>
 <script src="/js/jquery-3.2.1.min.js" ></script>
 <script src="/js/bootstrap.js" ></script>
 <script src="/js/bootstrap.min.js" ></script>
-<script src="/js/Questions.js" >
-
-</script>
 <script src="/js/onlineTest.js" ></script>
 </body>
 </html>

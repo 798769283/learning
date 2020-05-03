@@ -3,13 +3,15 @@ package com.ruoyi.web.controller.learning;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.core.controller.BaseController;
-import com.ruoyi.system.domain.LQuestions;
+import com.ruoyi.system.domain.LQuestionCategory;
+import com.ruoyi.system.service.impl.LQuestionCategoryServiceImpl;
 import com.ruoyi.system.service.impl.LQuestionsServiceImpl;
 import com.ruoyi.web.controller.dto.PageDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -34,6 +36,9 @@ public class OnlineTestController extends BaseController {
     @Autowired
     private LQuestionsServiceImpl questionsService;
 
+    @Autowired
+    private LQuestionCategoryServiceImpl questionCategoryService;
+
     /**
      * 获取考题列表
      * @return
@@ -41,9 +46,24 @@ public class OnlineTestController extends BaseController {
     @GetMapping("/lookQuestions")
     public String getLookQuestions(Model model){
         Map<String, Object> map = selectMaterials(1);
-        model.addAttribute("lQuestions", map.get("lQuestions"));
+        model.addAttribute("questionCategories", map.get("questionCategories"));
         model.addAttribute("pageDTO", map.get("pageDTO"));
         return prefix+"lookQuestions";
+    }
+
+    /**
+     *  异步加载考题列表
+     * @param currentSize 当前页
+     *
+     * @param url 返回的路径
+     * @return
+     */
+    @PostMapping("/lookQuestions/asynGetMaterial")
+    public String asynGetMaterial(Model model, int currentSize, String url){
+        Map<String, Object> map = selectMaterials(currentSize);
+        model.addAttribute("materialsList", map.get("materials"));
+        model.addAttribute("pageDTO", map.get("pageDTO"));
+        return prefix+url;
     }
 
     /**
@@ -55,15 +75,15 @@ public class OnlineTestController extends BaseController {
     private Map<String, Object> selectMaterials(int currentSize){
         Map<String, Object> map = new HashMap<>();
         // 1. 分页 按时间降序
-        PageHelper.startPage(currentSize, 5, "create_time desc");
-        List<LQuestions> lQuestions = questionsService.selectLQuestionsList(new LQuestions());
+        PageHelper.startPage(currentSize, 5);
+        List<LQuestionCategory> lQuestionCategories = questionCategoryService.selectLQuestionCategoryList(new LQuestionCategory());
         // 2. 设置查询类型 0-资料，1-作业，2-视频
-        PageInfo<LQuestions> info = new PageInfo<>(lQuestions);
+        PageInfo<LQuestionCategory> info = new PageInfo<>(lQuestionCategories);
         // 2. 分装分页对象返回前端
         PageDTO pageDTO = new PageDTO();
         pageDTO.setCurrentSize(info.getPageNum());
         pageDTO.setPages(info.getPages());
-        map.put("lQuestions", lQuestions);
+        map.put("questionCategories", lQuestionCategories);
         map.put("pageDTO", pageDTO);
         return map;
     }

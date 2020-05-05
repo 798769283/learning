@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" >
 	<head>
-		<meta charset="UTF-8" http-equiv="refresh" content="2">
+		<meta charset="UTF-8">
 		<title>师生互动</title>
 		<link rel="stylesheet" href="/css/bootstrap.min2.css"   />
 		<link rel="stylesheet" href="/css/global.css"   />
@@ -14,11 +14,11 @@
 					<!-- 选项 -->
 					<ul class="nav nav-tabs mb-3">
 						<li class="nav-item">
-							<a class="nav-link position-relative active" th:if="${session.user.userType == '学生'}" href="#">老师答复<span class="badge badge-danger">3</span></a>
-							<a class="nav-link position-relative active" th:if="${session.user.userType == '老师'}" href="#">学生提问<span class="badge badge-danger">3</span></a>
+							<a class="nav-link position-relative active" th:if="${session.user.userType == '学生'}" th:onclick="|switchPages('/learning/interactive',${pageDTO.currentSize})|" href="#">老师私信<span class="badge badge-danger" th:if="${totalUnreadMessage!=0}" th:text="${totalUnreadMessage}"></span></a>
+							<a class="nav-link position-relative active" th:if="${session.user.userType == '老师'}" th:onclick="|switchPages('/learning/interactive',${pageDTO.currentSize})|" href="#">学生私信<span class="badge badge-danger" th:if="${totalUnreadMessage!=0}" th:text="${totalUnreadMessage}"></span></a>
 						</li>
 					</ul>
-					<button type="button" class="btn btn-primary btn-sm position-absolute rt-0" data-toggle="modal" data-target="#sendModal">发私信</button>
+					<button type="button" class="btn btn-primary btn-sm position-absolute rt-0" data-toggle="modal" onclick="getUsers()" data-target="#sendModal">发私信</button>
 				</div>
 				<!-- 弹出框 -->
 				<div class="modal fade" id="sendModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -30,15 +30,17 @@
 									<span aria-hidden="true">&times;</span>
 								</button>
 							</div>
-							<div class="modal-body">
+							<div class="modal-body" id="interactive" th:fragment="interactive">
 								<form>
 									<div class="form-group">
-										<label for="recipient-name" class="col-form-label">发给：</label>
-										<input type="text" class="form-control" id="recipient-name">
+										<label for="userId" class="col-form-label">发给：</label>
+										<select name="userId" class="form-control" id="userId" th:with="users=${userList}">
+											<option th:each="user : ${users}"  th:text="${user.username}" th:value="${user.id}"></option>
+										</select>
 									</div>
 									<div class="form-group">
-										<label for="message-text" class="col-form-label">内容：</label>
-										<textarea class="form-control" id="message-text" rows="10"></textarea>
+										<label for="content" class="col-form-label">内容：</label>
+										<textarea class="form-control" id="content" rows="10"></textarea>
 									</div>
 								</form>
 							</div>
@@ -48,63 +50,42 @@
 							</div>
 						</div>
 					</div>
-				</div>		
-				<!-- 提示框 -->
-				<div class="modal fade" id="hintModal" tabindex="-1" role="dialog" aria-labelledby="hintModalLabel" aria-hidden="true">
-					<div class="modal-dialog modal-lg" role="document">
-						<div class="modal-content">
-							<div class="modal-header">
-								<h5 class="modal-title" id="hintModalLabel">提示</h5>
-							</div>
-							<div class="modal-body" id="hintBody">
-								发送完毕!
-							</div>
-						</div>
-					</div>
-				</div>								
+				</div>
 				<!-- 私信列表 -->
 				<ul class="list-unstyled">
-					<li class="media pb-3 pt-3 mb-3 border-bottom position-relative">
+					<li class="media pb-3 pt-3 mb-3 border-bottom position-relative" th:each="messages :${messagesList}">
 						<div class="media-body">
 							<h6 class="mt-0 mb-3">
-								<span class="text-success">落基山脉下的闲人</span>
-								<span class="float-right text-muted font-size-12">2019-04-28 14:13:25</span>
+								<span class="text-success" style="margin-left: 20px" th:text="${messages.userDTO.username}"></span><span class="badge badge-danger" th:if="${messages.unreadSum!=0}" th:text="${messages.unreadSum}"></span>
+								<span class="float-right text-muted font-size-12" th:text="${#dates.format(messages.lMessage.createTime,'yyyy-MM-dd hh:mm')}"></span>
 							</h6>
 							<div>
-								<a href="#" onclick="switchPages('learning/interactive-detail')">米粉车, 你来吧!</a>
+								<a href="#" th:onclick="switchPages('/learning/interactiveDetail',[[${messages.conversationId}]]);" th:text="${messages.lMessage.content}"></a>
 								<ul class="d-inline font-size-12 float-right">
-									<li class="d-inline ml-2"><a href="#" class="text-primary">共5条会话</a></li>
+									<li class="d-inline ml-2"><a href="#" class="text-primary">共<span th:text="${messages.totalMessage}"></span>条会话</a></li>
 								</ul>
 							</div>
 						</div>
-					</li>																				
-					<li class="media pb-3 pt-3 mb-3 border-bottom position-relative">
-						<div class="media-body">
-							<h6 class="mt-0 mb-3">
-								<span class="text-success">落基山脉下的闲人</span>
-								<span class="float-right text-muted font-size-12">2019-04-28 14:13:25</span>
-							</h6>
-							<div>
-								<a href="#">米粉车, 你来吧!</a>
-								<ul class="d-inline font-size-12 float-right">
-									<li class="d-inline ml-2"><a href="#" class="text-primary">共5条会话</a></li>
-								</ul>
-							</div>
-						</div>
-					</li>																																								
+					</li>
 				</ul>
 				<!-- 分页 -->
 				<nav class="mt-5">
 					<ul class="pagination justify-content-center">
-						<li class="page-item"><a class="page-link" href="#">首页</a></li>
-						<li class="page-item disabled"><a class="page-link" href="#">上一页</a></li>
-						<li class="page-item active"><a class="page-link" href="#">1</a></li>
-						<li class="page-item"><a class="page-link" href="#">2</a></li>
-						<li class="page-item"><a class="page-link" href="#">3</a></li>
-						<li class="page-item"><a class="page-link" href="#">4</a></li>
-						<li class="page-item"><a class="page-link" href="#">5</a></li>
-						<li class="page-item"><a class="page-link" href="#">下一页</a></li>
-						<li class="page-item"><a class="page-link" href="#">末页</a></li>
+						<li class="page-item" th:if="${pageDTO.currentSize!=1}">
+							<a class="page-link" href="#" th:onclick="|switchPages('/learning/interactive',1)|" >首页</a>
+						</li>
+						<li th:class=" ${pageDTO.currentSize== 1}?'page-item disabled': 'page-item'">
+							<a class="page-link" href="#" th:onclick="|switchPages('/learning/interactive',${pageDTO.currentSize-1})|">上一页</a>
+						</li>
+						<li th:class="${pageDTO.currentSize== i}?'page-item active': 'page-item'" th:each="i:${#numbers.sequence(1, pageDTO.pages)}">
+							<a class="page-link" th:onclick="|switchPages('/learning/interactive',${i})|" th:text="${i}"></a>
+						</li>
+						<li th:class=" ${pageDTO.currentSize== pageDTO.pages}?'page-item disabled': 'page-item'">
+							<a class="page-link" th:onclick="|switchPages('/learning/interactive',${pageDTO.currentSize+1})|"  href="#">下一页</a>
+						</li>
+						<li class="page-item "th:if="${pageDTO.currentSize!=pageDTO.pages}">
+							<a class="page-link" href="#" th:onclick="|switchPages('/learning/interactive',${pageDTO.pages})|">末页</a>
+						</li>
 					</ul>
 				</nav>
 			</div>
@@ -115,9 +96,38 @@
 		<script src="/js/global.js" ></script>
 		<script src="/js/letter.js" ></script>
 		<script>
-			 function switchPages(url){
-			 	 window.parent.switchPages(url);
-		     }
+
+			function switchPages(url,param){
+				window.parent.switchPage(url,param);
+			}
+			function switchPage(param) {
+
+			}
+
+			// 异步获取用户信息
+			function getUsers() {
+				$.get('/learning/getUserNames',{},function (data) {
+					$("#interactive").html(data);
+				})
+			}
+			// 发送信息
+			$("#sendBtn").click(function () {
+				var userid  =  $("#userId").val();
+				var content = $("#content").val();
+				$.post('/learning/sendMessage',
+					{
+						userid  : userid,
+						content : content
+					},
+					function (data) {
+						if (data.code == 0){
+							$("#content").val("");
+						}
+						window.location.reload();
+						alert(data.msg);
+					}
+				);
+			});
 		</script>
 	</body>
 </html>

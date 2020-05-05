@@ -117,7 +117,7 @@ public class UserController  extends BaseController {
      */
     @GetMapping("/judgeUser")
     @ResponseBody
-    private AjaxResult judgeUser(){
+    public AjaxResult judgeUser(){
         Object user = getRequest().getSession().getAttribute("user");
         if (user==null){
             return error("您没有登录，请登录后再操作！");

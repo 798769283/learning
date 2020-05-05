@@ -94,4 +94,67 @@ public class LMessageServiceImpl implements ILMessageService
     {
         return lMessageMapper.deleteLMessageById(id);
     }
+
+    /**
+     * 查询当前用户私信列表
+     * @param userId 接收人的ID
+     * @return
+     */
+    @Override
+    public List<LMessage> selectMessageList(String userId) {
+        return lMessageMapper.selectMessageList(userId);
+    }
+
+    /**
+     * 查询当前用户未读信息
+     * @param userId
+     * @param conversationId
+     * @return
+     */
+    @Override
+    public Integer sumUnreadMessage(String userId, String conversationId) {
+        return lMessageMapper.sumUnreadMessage(userId, conversationId);
+    }
+
+    /**
+     *  查询当前会话全部消息总和
+     *  @param conversationId 会话id
+     * @return
+     */
+    @Override
+    public Integer totalMessage(String conversationId) {
+        return lMessageMapper.totalMessage(conversationId);
+    }
+
+    /**
+     * 查看当前会话全部消息详情
+     * @param conversationId
+     * @return
+     */
+    @Override
+    public List<LMessage> selectMessageByConversationIdList(String conversationId) {
+        return lMessageMapper.selectMessageByConversationIdList(conversationId);
+    }
+
+    /**
+     * 查看当前用户全部未读消息记录
+     * @param userId
+     * @return
+     */
+    @Override
+    public Integer totalUnreadMessage(String userId) {
+        return lMessageMapper.totalUnreadMessage(userId);
+    }
+
+    /**
+     *  改变消息状态
+     * @param userId 用户id
+     * @param status 消息状态
+     * @param conversationId 会话ID
+     * @return
+     */
+    @Override
+    public int updateMeesageStatus(String userId, String status, String conversationId) {
+        return lMessageMapper.updateMeesageStatus(userId, status, conversationId);
+    }
 }

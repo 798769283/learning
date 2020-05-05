@@ -1,7 +1,9 @@
 package com.ruoyi.system.mapper;
 
-import java.util.List;
 import com.ruoyi.system.domain.LMessage;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * 会话Mapper接口
@@ -58,4 +60,49 @@ public interface LMessageMapper
      * @return 结果
      */
     public int deleteLMessageByIds(String[] ids);
+
+    /**
+     * 查询当前用户私信列表
+     * @param userId 接收人的ID
+     * @return
+     */
+    public List<LMessage> selectMessageList(String userId);
+
+    /**
+     * 查询当前用户未读信息
+     * @param userId
+     * @param conversationId 会话id
+     * @return
+     */
+    public Integer sumUnreadMessage(@Param("userID") String userId, @Param("conversationId") String conversationId);
+
+    /**
+     *  查询当前会话全部消息总和
+     *  @param conversationId 会话id
+     * @return
+     */
+    public Integer totalMessage(String conversationId);
+
+    /**
+     * 查看当前会话全部消息详情
+     * @param conversationId
+     * @return
+     */
+    public List<LMessage> selectMessageByConversationIdList(String conversationId);
+
+    /**
+     * 查看当前用户全部未读消息记录
+     * @param userId
+     * @return
+     */
+    public Integer totalUnreadMessage(String userId);
+
+    /**
+     *  改变消息状态
+     * @param userId 用户id
+     * @param status 消息状态
+     * @param conversationId 会话ID
+     * @return
+     */
+    public int updateMeesageStatus(@Param("userId") String userId, @Param("status") String status, @Param("conversationId") String conversationId);
 }

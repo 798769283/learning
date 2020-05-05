@@ -8,6 +8,7 @@ import com.ruoyi.system.domain.LMaterial;
 import com.ruoyi.system.service.ILAnnouncementService;
 import com.ruoyi.system.service.ILMaterialService;
 import com.ruoyi.web.controller.dto.PageDTO;
+import com.ruoyi.web.controller.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -47,15 +48,24 @@ public class LearningIndex extends BaseController {
      */
     @GetMapping({"/",""})
     public String getIndex(Model model){
+        UserDTO user = (UserDTO) getRequest().getSession().getAttribute("user");
+        // 根据用户加载菜单
+        String main = "learning/main";
+        if (user != null){
+            if ("老师".equals(user.getUserType())){
+                main = "learning/main2";
+            }
+        }
         // 1. 加载最新文章
         PageHelper.startPage(1, 5, "create_time desc");
         List<LAnnouncement> lAnnouncements = announcementService.selectLAnnouncementList(new LAnnouncement());
         model.addAttribute("announcementList",lAnnouncements);
+        model.addAttribute("main", main);
         return prefix+"index";
     }
 
     /**
-     * 菜单页
+     * 学生菜单页
      * @param model
      *
      * @return
@@ -88,6 +98,10 @@ public class LearningIndex extends BaseController {
         return prefix+"main";
     }
 
+    @GetMapping("/main2")
+    public String getMain2(Model model){
+        return prefix+"main2";
+    }
     /**
      * 抽取首页菜单公共资料分页代码
      * @param status 根据类型查找  0-资料，1-作业，2-视频

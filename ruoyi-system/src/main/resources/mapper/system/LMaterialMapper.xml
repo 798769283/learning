@@ -12,10 +12,11 @@
         <result property="status"    column="status"    />
         <result property="createTime"    column="create_time"    />
         <result property="dId"    column="d_id"    />
+        <result property="createBy"    column="createBy"    />
     </resultMap>
 
     <sql id="selectLMaterialVo">
-        select id, name, Introduction, file_url, status, create_time, d_id from l_material
+        select id, name, Introduction, file_url, status, create_time, d_id, createBy from l_material
     </sql>
 
     <select id="selectLMaterialList" parameterType="LMaterial" resultMap="LMaterialResult">
@@ -26,6 +27,7 @@
             <if test="fileUrl != null  and fileUrl != ''"> and file_url = #{fileUrl}</if>
             <if test="status != null "> and status = #{status}</if>
             <if test="dId != null "> and d_id = #{dId}</if>
+            <if test="createBy != null and createBy != ''"> createBy = #{createBy}</if>
         </where>
     </select>
 
@@ -43,6 +45,7 @@
             <if test="status != null ">status,</if>
             <if test="createTime != null ">create_time,</if>
             <if test="dId != null ">d_id,</if>
+            <if test="createBy != null and createBy != ''"> createBy</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="name != null  and name != ''">#{name},</if>
@@ -51,6 +54,7 @@
             <if test="status != null ">#{status},</if>
             <if test="createTime != null ">#{createTime},</if>
             <if test="dId != null ">#{dId},</if>
+            <if test="createBy != null and createBy != ''"> #{createBy}</if>
         </trim>
     </insert>
 
@@ -63,6 +67,7 @@
             <if test="status != null ">status = #{status},</if>
             <if test="createTime != null ">create_time = #{createTime},</if>
             <if test="dId != null ">d_id = #{dId},</if>
+            <if test="createBy != null and createBy != ''"> createBy = #{createBy}</if>
         </trim>
         where id = #{id}
     </update>

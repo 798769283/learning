@@ -18,7 +18,7 @@
 		<th class="active">上传时间</th>
 		<th class="active" th:if="${session.user!=null}">下载</th>
 		<tr th:each="material : ${materialsWork}">
-			<td th:text="${material.name}"></td>
+			<td><a href="#" th:text="${material.name}" th:onclick="|switchPages('/learning/materialLook',${material.id})|"></a></td>
 			<td th:text="${material.introduction}"></td>
 			<td th:text="${#dates.format(material.createTime,'yyyy-MM-dd hh:mm')}"></td>
 			<td><a href="#" th:if="${session.user!=null}" th:href="@{${material.fileUrl}}" style="color: red;">down</a></td>
@@ -47,11 +47,13 @@
 		<th class="active">   </th>
 		<th class="active">   </th>
 		<th class="active">上传时间</th>
+		<th class="active" th:if="${session.user!=null}">下载</th>
 		<tr th:each="material :${materialsList}">
-			<td th:text="${material.name}"></td>
+			<td><a href="#" th:text="${material.name}" th:onclick="|switchPages('/learning/materialLook',${material.id})|"></a></td>
 			<td></td>
 			<td></td>
 			<td th:text="${#dates.format(material.createTime,'yyyy-MM-dd hh:mm')}"></td>
+			<td><a href="#" th:if="${session.user!=null}" th:href="@{${material.fileUrl}}" style="color: red;">down</a></td>
 		</tr>
 	</table>
 	<nav aria-label="Page navigation" class="pagination-1">
@@ -75,7 +77,9 @@
 <script src="/js/bootstrap.js" ></script>
 <script src="/js/bootstrap.min.js" ></script>
 <script>
-
+	function switchPages(url,param){
+		window.parent.switchPage(url,param);
+	}
 	// 异步加载分页数据
 	function asynGetMaterial(currentSize,b,type,url) {
 		// 判断点击的是否是当前页，如果是前端就拒绝不要跑后端了

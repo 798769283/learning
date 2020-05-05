@@ -1,7 +1,5 @@
 package com.ruoyi.system.domain;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
@@ -38,7 +36,21 @@ public class LMaterial extends BaseEntity
     @Excel(name = "所属专业的资料")
     private Long dId;
 
-    public void setId(Long id) 
+    /** 创建者 */
+    @Excel(name = "创建者")
+    private String createBy;
+
+    @Override
+    public String getCreateBy() {
+        return createBy;
+    }
+
+    @Override
+    public void setCreateBy(String createBy) {
+        this.createBy = createBy;
+    }
+
+    public void setId(Long id)
     {
         this.id = id;
     }
@@ -94,13 +106,14 @@ public class LMaterial extends BaseEntity
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("name", getName())
-            .append("introduction", getIntroduction())
-            .append("fileUrl", getFileUrl())
-            .append("status", getStatus())
-            .append("createTime", getCreateTime())
-            .toString();
+        return "LMaterial{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", introduction='" + introduction + '\'' +
+                ", fileUrl='" + fileUrl + '\'' +
+                ", status=" + status +
+                ", dId=" + dId +
+                ", createBy='" + createBy + '\'' +
+                '}';
     }
 }

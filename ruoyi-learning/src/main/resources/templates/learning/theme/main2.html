@@ -9,90 +9,136 @@
 		<link rel="stylesheet" href="/css/bootstrap-theme.min.css" />
 		<link rel="stylesheet" href="/css/bootstrap.css" />
 		<link rel="stylesheet" href="/css/bootstrap.min.css" />
-		<link rel="stylesheet" type="text/css" href="http://www.jq22.com/jquery/bootstrap-3.3.4.css">
-		<link rel="stylesheet" type="text/css" href="/css/jquery.filer.css">
-	    <link rel="stylesheet" type="text/css" href="/css/jquery.filer-dragdropbox-theme.css">
-	    <link rel="stylesheet" type="text/css" href="/css/tomorrow.css">
-	    <link rel="stylesheet" type="text/css" href="/css/custom.css">
+		<link href="/ajax/libs/bootstrap-fileinput/fileinput.min.css" rel="stylesheet"/>
 	<body>
 		<div class="main-top">
-			<h3 style="text-align: center;"><strong>作业管理</strong></h3>
+			<h3 style="text-align: center;"><strong>资料管理</strong></h3>
 			<table class="table table-hover">
   				<th class="active">名称</th>
-  				<th class="active">附件</th>
+  				<th class="active">简介</th>
+				<th class="active">类型</th>
   				<th class="active">上传时间</th>
-  				<th class="active">下载</th>
-  				<tr>
-  					<td>Java</td>
-  					<td>Java五六级</td>
-  					<td>2002-02-02 0:64:1</td>
-  					<td><a href="#" style="color: red;">down</a></td>
+  				<th class="active">操作</th>
+  				<tr th:each="material :${materials}">
+  					<td><a href="#" th:text="${material.name}" th:onclick="|switchPages('/learning/materialLook',${material.id})|"></a></td>
+  					<td th:text="${material.Introduction}"></td>
+					<td th:text="${statusList[material.status]}"></td>
+  					<td th:text="${#dates.format(material.createTime,'yyyy-MM-dd hh:mm')}"></td>
+  					<td>
+						<a href="#" th:href="@{${material.fileUrl}}" style="color: red;">下载</a>
+						<a href="#" th:onclick="|delet(${material.id})|" style="color: red;">删除</a>
+					</td>
   				</tr>
-  				<tr>
-  					<td>Java</td>
-  					<td>Java五六级</td>
-  					<td>2002-02-02 0:64:1</td>
-  					<td><a href="#" style="color: red;">down</a></td>
-  				</tr>
-  				<tr>
-  					<td>Java</td>
-  					<td>Java五六级</td>
-  					<td>2002-02-02 0:64:1</td>
-  					<td><a href="#" style="color: red;">down</a></td>
-  				</tr>
-  				<tr>
-  					<td>Java</td>
-  					<td>Java五六级</td>
-  					<td>2002-02-02 0:64:1</td>
-  					<td><a href="#" style="color: red;">down</a></td>
-  				</tr>
-  				
 			</table>
-			<nav aria-label="Page navigation" class="pagination-1">
+			<!--分页-->
+			<nav aria-label="Page navigation" style="margin-top: -30px" class="pagination-1">
  				<ul class="pagination">
-				    <li class="disabled">
-				      <a href="#" aria-label="Previous">
+				    <li th:if="${pageDTO.currentSize!=1}">
+				      <a href="#" aria-label="Previous" th:onclick="|switchPages('/learning/main2',${pageDTO.currentSize-1})|">
 				        <span aria-hidden="true">&laquo;</span>
 				      </a>
 				    </li>
-				    <li class="active"><a href="#">1</a></li>
-				    <li><a href="#">2</a></li>
-				    <li><a href="#">3</a></li>
-				    <li><a href="#">4</a></li>
-				    <li><a href="#">5</a></li>
-				    <li>
-				      <a href="#" aria-label="Next">
+				    <li th:class="${pageDTO.currentSize== i}? 'active' :'' " th:each="i:${#numbers.sequence(1, pageDTO.pages)}">
+						<a href="#" th:onclick="|switchPages('/learning/main2',${i})|" th:text="${i}"></a></li>
+				    <li th:if="${pageDTO.currentSize!=pageDTO.pages}">
+				      <a href="#" aria-label="Next" th:onclick="|switchPages('/learning/main2',${pageDTO.currentSize+1})|">
 				        <span aria-hidden="true">&raquo;</span>
 				      </a>
 				    </li>
  				</ul>
 			</nav>
 		</div>
-		<div class="main-bottom">
-			<h3 style="text-align: center;"><strong>发布新作业</strong></h3>
-			<div class="main2-from">
-				<div class="container">                                             
-                <br><hr><br>                                    
-                     <div class="row">                                    
-                        <div class="col-md-6">
-                            <b>上传作业:</b>
-                            <br><br>
-                             <form action="" method="post" enctype="multipart/form-data" class="text-center">
-                             	 文件名:<input type="text" name="fileName" />
-                                 <input type="file" name="files[]" id="demo-fileInput-4" multiple>
-                                 <input type="submit" class="btn-custom green" value="提交">
-                            </form>
-                        </div>
-                    </div>                                                                      
-				<br><hr><br>  
-            </div>
-			</div>
+		<!--上传资料或作业-->
+		<div class="main-bottom" style="height: 520px">
+			<h3 style="text-align: center;"><strong>发布新资料</strong></h3>
+			<form>
+				<div class="form-group">
+					<label class="col-sm-3 control-label">资料名称：</label>
+					<div class="col-sm-8">
+						<input name="name" id="name" class="form-control" type="text" required>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3 control-label">备注：</label>
+					<div class="col-sm-8">
+						<input name="introduction" id="introduction" class="form-control" type="text" required>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3 control-label is-required">资料上传：</label>
+					<div class="col-sm-8">
+						<div class="file-loading">
+							<input id="fileinput-demo-1" name="file" type="file" multiple>
+						</div>
+						<input name="fileUrl" id="fileUrl" class="form-control"  type="hidden" required>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3 control-label">资料类型：</label>
+					<div class="col-sm-8">
+						<select name="status" id="status" class="form-control m-b" th:with="status =${statusList}" >
+							<option th:each="statu :${status}" th:text="${statu}" th:value="${statuStat.index}"></option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<button style="margin-left: 330px; width:70px; height: 35px; color: #fff;background-color: #007bff; border-color: #007bff;" type="button" id="uploadMaterial" value="提交">提交</button>
+				</div>
+			</form>
 		</div>
-		<script src="http://www.jq22.com/jquery/jquery-1.10.2.js"></script>
-		<script src="http://www.jq22.com/jquery/bootstrap-3.3.4.js"></script>
-		<script src="/js/jquery.filer.min.js" type="text/javascript"></script>
-		<script src="/js/prettify.js" type="text/javascript"></script>
-		<script src="/js/scripts.js" type="text/javascript"></script>
-		<script src="/js/custom.js" type="text/javascript"></script>
+		<script src="/js/jquery-1.10.2.js" ></script>
+		<script src="/js/bootstrap.js" ></script>
+		<script src="/js/bootstrap.min.js" ></script>
+		<script src="/ajax/libs/bootstrap-fileinput/fileinput.min.js"></script>
+		<script>
+			$("#fileinput-demo-1").fileinput({
+				dropZoneTitle : "文件上传最大为150M！",
+				uploadUrl: "/common/upload",
+			});
+			$("#fileinput-demo-1").on("fileuploaded",function (e,data,previewiId,index) {
+				$("#fileUrl").attr('value',data.response.url);
+			})
+
+			// 上传方法
+			$("#uploadMaterial").click(function () {
+				var name 			=  $("#name").val();
+				var introduction    =  $("#introduction").val();
+				var fileUrl         =  $("#fileUrl").val();
+				var status          =  $("#status").val();
+				if (fileUrl == ''){
+					alert("请点击上传文件！！")
+					return false;
+				}
+				if (name == ''|| introduction == ''){
+					alert("有必填字段未填写！！")
+					return false;
+				}
+
+				$.post('/learning/uploadMaterial',{
+					name : name,
+					introduction : introduction,
+					fileUrl : fileUrl,
+					status : status
+				},function (data) {
+					if (data.code == 0){
+						alert(data.msg);
+						window.location.reload();
+					}else {
+						alert(data.msg);
+					}
+				})
+			})
+
+			function switchPages(url,param){
+				window.parent.switchPage(url,param);
+			}
+			// 删除方法
+			function delet(materialId) {
+				$.get('/learning/delete',{materialId:materialId},function (data) {
+					alert(data.msg)
+					window.location.reload();
+				})
+			}
+		</script>
 	</body>
 </html>

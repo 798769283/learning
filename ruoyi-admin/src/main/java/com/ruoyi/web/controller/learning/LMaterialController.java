@@ -6,7 +6,9 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.framework.util.ShiroUtils;
 import com.ruoyi.system.domain.LMaterial;
+import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.service.ILMaterialService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,6 +85,9 @@ public class LMaterialController extends BaseController
     @ResponseBody
     public AjaxResult addSave(LMaterial lMaterial)
     {
+        // 取身份信息
+        SysUser user = ShiroUtils.getSysUser();
+        lMaterial.setCreateBy(user.getLoginName());
         return toAjax(lMaterialService.insertLMaterial(lMaterial));
     }
 

@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.config.Global;
 import com.ruoyi.common.core.controller.BaseController;
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.system.domain.LAnnouncement;
 import com.ruoyi.system.domain.LMaterial;
 import com.ruoyi.system.service.ILAnnouncementService;
@@ -14,10 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ResourceUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
 import java.util.HashMap;
@@ -153,7 +151,9 @@ public class MaterialController extends BaseController {
             model.addAttribute("material", lMaterial);
             return prefix+"lookOver";
         }
-        breadCrumb[2]="目前只支持PDF+WORD文档在线预览";
+        if (!substring.equals(".docx")&&!substring.equals(".pdf")&&!substring.equals(".JPG")&&!substring.equals(".png")){
+            breadCrumb[2]="目前只支持PDF+WORD文档+图片在线预览";
+        }
         model.addAttribute("breadCrumb", breadCrumb);
         model.addAttribute("material", lMaterial);
         return prefix+"lookOver";
@@ -196,6 +196,16 @@ public class MaterialController extends BaseController {
         LAnnouncement lAnnouncement = announcementService.selectLAnnouncementById(id);
         model.addAttribute("announcement",lAnnouncement);
         return prefix+"article";
+    }
+
+    @GetMapping("/delete")
+    @ResponseBody
+    public AjaxResult deleteMaterial( Long materialId){
+        int i = materialService.deleteLMaterialById(materialId);
+        if (i>0){
+            return success("删除成功");
+        }
+        return error("删除失败");
     }
 
 }

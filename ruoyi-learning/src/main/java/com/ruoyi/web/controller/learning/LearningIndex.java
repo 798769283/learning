@@ -3,18 +3,19 @@ package com.ruoyi.web.controller.learning;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.core.controller.BaseController;
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.system.domain.LAnnouncement;
 import com.ruoyi.system.domain.LMaterial;
+import com.ruoyi.system.domain.LTeacher;
 import com.ruoyi.system.service.ILAnnouncementService;
 import com.ruoyi.system.service.ILMaterialService;
+import com.ruoyi.system.service.ILTeacherService;
 import com.ruoyi.web.controller.dto.PageDTO;
 import com.ruoyi.web.controller.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -38,6 +39,9 @@ public class LearningIndex extends BaseController {
     @Autowired
     private ILAnnouncementService announcementService;
 
+    @Autowired
+    private ILTeacherService teacherService;
+
     private static final String prefix = "learning/theme/";
 
     /**
@@ -53,7 +57,7 @@ public class LearningIndex extends BaseController {
         String main = "learning/main";
         if (user != null){
             if ("老师".equals(user.getUserType())){
-                main = "learning/main2";
+                main = "learning/main2/1";
             }
         }
         // 1. 加载最新文章
@@ -98,10 +102,31 @@ public class LearningIndex extends BaseController {
         return prefix+"main";
     }
 
-    @GetMapping("/main2")
-    public String getMain2(Model model){
+    @GetMapping("/main2/{countSize}")
+    public String getMain2(Model model,  @PathVariable int countSize){
+        PageHelper.startPage(countSize, 5, "create_time desc");
+        // 资料类型数组
+        String [] statusList ={"资料","作业","视频"};
+        // 取出当前用户
+        UserDTO user = (UserDTO) getRequest().getSession().getAttribute("user");
+        LMaterial lMaterial = new LMaterial();
+        // 按老师id查找上传的资料。
+        lMaterial.setCreateBy(user.getId());
+        List<LMaterial> lMaterials = materialService.selectLMaterialList(lMaterial);
+
+        // 分装分页对象返回前端
+        PageInfo<LMaterial> info = new PageInfo<>(lMaterials);
+        PageDTO pageDTO = new PageDTO();
+        pageDTO.setCurrentSize(info.getPageNum());
+        pageDTO.setPages(info.getPages());
+
+        // 存入数据模型
+        model.addAttribute("materials", lMaterials);
+        model.addAttribute("pageDTO", pageDTO);
+        model.addAttribute("statusList", statusList);
         return prefix+"main2";
     }
+
     /**
      * 抽取首页菜单公共资料分页代码
      * @param status 根据类型查找  0-资料，1-作业，2-视频
@@ -162,5 +187,24 @@ public class LearningIndex extends BaseController {
         return prefix+"register";
     }
 
+    /**
+     * 上传资料
+     * @param lMaterial
+     * @return
+     */
+    @PostMapping("/uploadMaterial")
+    @ResponseBody
+    public AjaxResult uploadMaterial(LMaterial lMaterial){
+        UserDTO user = (UserDTO) getRequest().getSession().getAttribute("user");
+        LTeacher lTeacher = teacherService.selectLTeacherByTearcherId(user.getId());
+        lMaterial.setdId(lTeacher.getdId());
+        lMaterial.setCreateBy(user.getId());
+        System.out.println(lMaterial.toString());
+        int i = materialService.insertLMaterial(lMaterial);
+        if (i>0){
+            return success("上传成功");
+        }
+        return error("上传失败");
+    }
 
 }

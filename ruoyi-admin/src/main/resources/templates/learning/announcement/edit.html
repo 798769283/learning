@@ -73,6 +73,8 @@
 
         function submitHandler() {
             if ($.validate.form()) {
+                var sHTML = $('.summernote').summernote('code');
+                $("#noticeContent").val(sHTML);
                 $.operate.save(prefix + "/edit", $('#form-announcement-edit').serialize());
             }
         }

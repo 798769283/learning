@@ -255,6 +255,7 @@ public class ShiroConfig
         filterChainDefinitionMap.put("/logout", "logout");
 
         filterChainDefinitionMap.put("/profile/upload/**", "anon");
+        filterChainDefinitionMap.put("/common/upload", "anon");
         filterChainDefinitionMap.put("/profile/material/**", "anon");
         //注意前台学习网站请求不拦截
         filterChainDefinitionMap.put("/learning/**", "anon");

@@ -66,14 +66,15 @@ public class UserController  extends BaseController {
             LTeacherAccount teacherAccount = new LTeacherAccount();
             teacherAccount.setUsername(username);
             teacherAccount.setPassword(DigestUtils.md5Hex(password));
-            LTeacherAccount lTeacherAccount = teacherAccountService
-                    .selectLTeacherAccountList(teacherAccount).get(0);
+            List<LTeacherAccount> lTeacherAccounts = teacherAccountService
+                    .selectLTeacherAccountList(teacherAccount);
 
             // 如果为null就是没有查到
-            if (lTeacherAccount==null)
+            if (lTeacherAccounts.size()==0)
             {
                 return error("账户或密码错误！");
             }
+            LTeacherAccount lTeacherAccount = lTeacherAccounts.get(0);
             // 存入用户
             SessionSetUser(lTeacherAccount.getUsername(),"老师",lTeacherAccount.getTeacherId());
         }else if("1".equals(userType))

@@ -96,6 +96,7 @@
 				uploadUrl: "/common/upload",
 			});
 			$("#fileinput-demo-1").on("fileuploaded",function (e,data,previewiId,index) {
+				alert(data.response.url)
 				$("#fileUrl").attr('value',data.response.url);
 			})
 
